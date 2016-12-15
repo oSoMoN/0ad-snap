@@ -15,4 +15,6 @@ fi
 
 export LIBGL_DRIVERS_PATH="$SNAP/usr/lib/$ARCH/dri"
 
+export LOCPATH=$SNAP/usr/lib/locale
+
 exec "$SNAP/binaries/system/pyrogenesis" "$@"
