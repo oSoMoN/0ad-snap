@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #export SDL_DEBUG=1
 #export LIBGL_DEBUG=verbose
