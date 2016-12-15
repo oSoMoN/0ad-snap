@@ -2,6 +2,17 @@
 
 #export SDL_DEBUG=1
 #export LIBGL_DEBUG=verbose
-export LIBGL_DRIVERS_PATH="$SNAP/usr/lib/x86_64-linux-gnu/dri"
+
+if [ "$SNAP_ARCH" == "amd64" ]; then
+  ARCH="x86_64-linux-gnu"
+elif [ "$SNAP_ARCH" == "armhf" ]; then
+  ARCH="arm-linux-gnueabihf"
+elif [ "$SNAP_ARCH" == "arm64" ]; then
+  ARCH="aarch64-linux-gnu"
+else
+  ARCH="$SNAP_ARCH-linux-gnu"
+fi
+
+export LIBGL_DRIVERS_PATH="$SNAP/usr/lib/$ARCH/dri"
 
 exec "$SNAP/binaries/system/pyrogenesis" "$@"
