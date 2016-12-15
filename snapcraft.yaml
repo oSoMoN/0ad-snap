@@ -1,0 +1,84 @@
+name: play0ad
+version: 0.0.21-alpha
+summary: Real-time strategy game of ancient warfare
+description: |
+ 0 A.D. (pronounced "zero ey-dee") is a free, open-source, cross-platform
+ real-time strategy (RTS) game of ancient warfare. In short, it is a
+ historically-based war/economy game that allows players to relive or rewrite
+ the history of Western civilizations, focusing on the years between 500 B.C.
+ and 500 A.D. The project is highly ambitious, involving state-of-the-art 3D
+ graphics, detailed artwork, sound, and a flexible and powerful custom-built
+ game engine.
+confinement: strict
+
+apps:
+  0ad:
+    command: play0ad.launcher
+    plugs:
+      - network
+      - network-bind
+      - opengl
+      - process-control
+      - pulseaudio
+      - screen-inhibit-control
+      - x11
+
+parts:
+  0ad-unix-build:
+    plugin: x-0adbuild
+    source: http://releases.wildfiregames.com/0ad-0.0.21-alpha-unix-build.tar.xz
+    build-packages:
+      - autoconf
+      - debhelper
+      - dpkg-dev
+      - libboost-dev
+      - libboost-filesystem-dev
+      - libcurl4-gnutls-dev
+      - libenet-dev
+      - libgloox-dev
+      - libicu-dev
+      - libminiupnpc-dev
+      - libnspr4-dev
+      - libnvtt-dev
+      - libogg-dev
+      - libopenal-dev
+      - libpng12-dev
+      - libsdl2-dev
+      - libvorbis-dev
+      - libwxgtk3.0-dev
+      - libxcursor-dev
+      - libxml2-dev
+      - pkg-config
+      - zlib1g-dev
+  0ad-unix-data:
+    plugin: dump
+    source: http://releases.wildfiregames.com/0ad-0.0.21-alpha-unix-data.tar.xz
+    organize:
+      config: binaries/data/config
+      mods: binaries/data/mods
+      tools: binaries/data/tools
+  0ad-launcher:
+    plugin: dump
+    source: .
+    stage-packages:
+      - libboost-filesystem1.58.0
+      - libc6
+      - libcurl3-gnutls
+      - libenet7
+      - libgcc1
+      - libgl1-mesa-glx
+      - libgloox13v5
+      - libicu55
+      - libminiupnpc10
+      - libnspr4
+      - libnvtt2
+      - libopenal1
+      - libpng12-0
+      - libsdl2-2.0-0
+      - libstdc++6
+      - libvorbisfile3
+      - libx11-6
+      - libxcursor1
+      - libxml2
+      - locales-all
+      - zlib1g

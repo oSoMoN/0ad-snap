@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#export SDL_DEBUG=1
+#export LIBGL_DEBUG=verbose
+export LIBGL_DRIVERS_PATH="$SNAP/usr/lib/x86_64-linux-gnu/dri"
+
+exec "$SNAP/binaries/system/pyrogenesis" "$@"
