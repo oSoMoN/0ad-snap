@@ -48,6 +48,7 @@ parts:
       - libwxgtk3.0-dev
       - libxcursor-dev
       - libxml2-dev
+      - patch
       - pkg-config
       - zlib1g-dev
   0ad-unix-data:
