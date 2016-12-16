@@ -9,7 +9,7 @@ class X0ADBuildPlugin(snapcraft.BasePlugin):
         patches = ['allow-build-with-root.patch']
         for patch in patches:
             with open(os.path.join(patches_dir, patch), 'rb', 0) as pfile:
-                self.run(['patch', '-d', self.sourcedir, '-p1'], stdin=pfile)
+                self.run(['patch', '-d', self.builddir, '-p1'], stdin=pfile)
         parallel_arg = '-j{}'.format(self.parallel_build_count)
         self.run(['build/workspaces/update-workspaces.sh',
                   '--with-system-nvtt',
