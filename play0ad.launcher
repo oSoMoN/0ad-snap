@@ -17,4 +17,9 @@ export LIBGL_DRIVERS_PATH="$SNAP/usr/lib/$ARCH/dri"
 
 export LOCPATH=$SNAP/usr/lib/locale
 
+CONFIG_DIR="$SNAP_USER_DATA/.config/0ad/config"
+[ -d "$CONFIG_DIR" ] || mkdir -p "$CONFIG_DIR"
+USER_CFG="$CONFIG_DIR/user.cfg"
+[ -f "$USER_CFG" ] || touch "$USER_CFG"
+
 exec "$SNAP/binaries/system/pyrogenesis" "$@"
