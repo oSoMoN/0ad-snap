@@ -5,7 +5,7 @@ import snapcraft
 class X0ADBuildPlugin(snapcraft.BasePlugin):
 
     def build(self):
-        patches_dir = os.path.join(self.project.parts_dir, 'patches')
+        patches_dir = os.path.join(self.project.local_plugins_dir, 'patches')
         patches = ['allow-build-with-root.patch']
         for patch in patches:
             with open(os.path.join(patches_dir, patch), 'rb', 0) as pfile:
