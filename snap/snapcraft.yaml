@@ -25,7 +25,7 @@ apps:
 
 parts:
   0ad-unix-build:
-    plugin: x-0adbuild
+    plugin: nil
     source: http://releases.wildfiregames.com/0ad-0.0.21-alpha-unix-build.tar.xz
     build-packages:
       - autoconf
@@ -51,6 +51,11 @@ parts:
       - patch
       - pkg-config
       - zlib1g-dev
+    prepare: |
+      patch -d . -p1 < ../../../snap/patches/allow-build-with-root.patch
+      build/workspaces/update-workspaces.sh --with-system-nvtt
+    build: make config=release -C build/workspaces/gcc
+    install: cp -R binaries $SNAPCRAFT_PART_INSTALL/
   0ad-unix-data:
     plugin: dump
     source: http://releases.wildfiregames.com/0ad-0.0.21-alpha-unix-data.tar.xz
