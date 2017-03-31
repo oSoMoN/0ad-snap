@@ -53,8 +53,8 @@ parts:
       - zlib1g-dev
     prepare: |
       patch -d . -p1 < ../../../snap/patches/allow-build-with-root.patch
-      build/workspaces/update-workspaces.sh --with-system-nvtt
-    build: make config=release -C build/workspaces/gcc
+      build/workspaces/update-workspaces.sh --with-system-nvtt -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
+    build: make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT config=release -C build/workspaces/gcc
     install: cp -R binaries $SNAPCRAFT_PART_INSTALL/
   0ad-unix-data:
     plugin: dump
