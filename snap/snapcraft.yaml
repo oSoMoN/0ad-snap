@@ -53,6 +53,7 @@ parts:
       - zlib1g-dev
     prepare: |
       patch -d . -p1 < ../../../snap/patches/allow-build-with-root.patch
+      patch -d . -p1 < ../../../snap/patches/use-sdl-semaphores.patch
       build/workspaces/update-workspaces.sh --with-system-nvtt -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
     build: make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT config=release -C build/workspaces/gcc
     install: cp -R binaries $SNAPCRAFT_PART_INSTALL/
@@ -67,8 +68,11 @@ parts:
     plugin: dump
     source: snap
     prime:
+      - etc/fonts/
       - lib/
       - usr/lib/
+      - usr/share/fonts/
+      - usr/share/themes/
       - usr/share/X11/
       - play0ad.launcher
     stage-packages:
@@ -88,6 +92,8 @@ parts:
       - libsdl2-2.0-0
       - libstdc++6
       - libvorbisfile3
+      - libwxbase3.0-0v5
+      - libwxgtk3.0-0v5
       - libx11-6
       - libxcursor1
       - libxml2
