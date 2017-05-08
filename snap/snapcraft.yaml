@@ -56,7 +56,13 @@ parts:
       patch -d . -p1 < ../../../snap/patches/use-sdl-semaphores.patch
       build/workspaces/update-workspaces.sh --with-system-nvtt -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
     build: make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT config=release -C build/workspaces/gcc
-    install: cp -R binaries $SNAPCRAFT_PART_INSTALL/
+    install: |
+      P=binaries/system
+      mkdir -p $SNAPCRAFT_PART_INSTALL/$P
+      cp $P/pyrogenesis $P/ActorEditor $P/libAtlasUI.so $P/libCollada.so $P/libmozjs38-ps-release.so $P/readme.txt $SNAPCRAFT_PART_INSTALL/$P/
+      P=binaries/data/l10n
+      mkdir -p $SNAPCRAFT_PART_INSTALL/$P
+      cp $P/*.po $SNAPCRAFT_PART_INSTALL/$P/
   0ad-unix-data:
     plugin: dump
     source: http://releases.wildfiregames.com/0ad-0.0.21-alpha-unix-data.tar.xz
