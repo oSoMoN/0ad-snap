@@ -1,7 +1,7 @@
 Description: Use SDL semaphores instead of named semaphores, that fail under strict confinement
 Forwarded: no
 Author: Olivier Tilloy <olivier@tilloy.net>
-Last-Update: 2017-05-04
+Last-Update: 2017-05-15
 
 --- a/source/tools/atlas/GameInterface/MessagePasserImpl.h
 +++ b/source/tools/atlas/GameInterface/MessagePasserImpl.h
@@ -32,9 +32,7 @@ Last-Update: 2017-05-04
  {
 -	int tries = 0;
 -	while (tries++ < 16) // some arbitrary cut-off point to avoid infinite loops
-+	m_Semaphore = SDL_CreateSemaphore(0);
-+	if (m_Semaphore == NULL)
- 	{
+-	{
 -		static char name[64];
 -		sprintf_s(name, ARRAY_SIZE(name), "/wfg-atlas-msgpass-%d-%d",
 -				(int)rand(1, 1000), (int)(time(0)%1000));
@@ -59,13 +57,14 @@ Last-Update: 2017-05-04
 -		m_SemaphoreName = name;
 -		break;
 -	}
--	
+-
 -	if (! m_Semaphore)
--	{
--		debug_warn(L"Failed to create semaphore for Atlas - giving up");
++	m_Semaphore = SDL_CreateSemaphore(0);
++	if (m_Semaphore == NULL)
+ 	{
+ 		debug_warn(L"Failed to create semaphore for Atlas - giving up");
 -		// We will probably crash later - maybe we could fall back on sem_init, if this
 -		// ever fails in practice
-+	    debug_warn(L"Failed to create semaphore for Atlas - giving up");
  	}
  }
  
@@ -104,7 +103,7 @@ Last-Update: 2017-05-04
 
 --- a/source/tools/atlas/GameInterface/GameLoop.cpp
 +++ b/source/tools/atlas/GameInterface/GameLoop.cpp
-@@ -185,7 +185,7 @@ static void* RunEngine(void* data)
+@@ -184,7 +184,7 @@ static void* RunEngine(void* data)
  				{
  					// For queries, we need to notify MessagePasserImpl::Query
  					// that the query has now been processed.
