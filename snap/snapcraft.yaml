@@ -1,5 +1,5 @@
 name: 0ad
-version: 0.0.22-alpha
+version: 0.0.23-alpha
 summary: Real-time strategy game of ancient warfare
 description: |
  0 A.D. (pronounced "zero ey-dee") is a free, open-source, cross-platform
@@ -33,7 +33,7 @@ apps:
 parts:
   0ad-unix-build:
     plugin: nil
-    source: http://releases.wildfiregames.com/0ad-0.0.22-alpha-unix-build.tar.xz
+    source: https://releases.wildfiregames.com/0ad-0.0.23-alpha-unix-build.tar.xz
     build-packages:
       - autoconf
       - debhelper
@@ -72,7 +72,7 @@ parts:
       cp $P/*.po $SNAPCRAFT_PART_INSTALL/$P/
   0ad-unix-data:
     plugin: dump
-    source: http://releases.wildfiregames.com/0ad-0.0.22-alpha-unix-data.tar.xz
+    source: https://releases.wildfiregames.com/0ad-0.0.23-alpha-unix-data.tar.xz
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
