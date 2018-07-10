@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Name=0 A.D.
-Exec=play0ad.0ad
+Exec=0ad
 Icon=${SNAP}/meta/gui/icon.png
 Terminal=false
 Type=Application
