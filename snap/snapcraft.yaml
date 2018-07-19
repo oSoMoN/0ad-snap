@@ -14,6 +14,7 @@ confinement: strict
 apps:
   0ad:
     command: play0ad.launcher
+    desktop: 0ad.desktop
     plugs:
       - network
       - network-bind
@@ -70,6 +71,8 @@ parts:
       P=binaries/data/l10n
       mkdir -p $SNAPCRAFT_PART_INSTALL/$P
       cp $P/*.po $SNAPCRAFT_PART_INSTALL/$P/
+      cp build/resources/0ad.desktop $SNAPCRAFT_PART_INSTALL/
+      sed -i -e "s#Icon=0ad#Icon=/icon.png#" $SNAPCRAFT_PART_INSTALL/0ad.desktop
   0ad-unix-data:
     plugin: dump
     source: https://releases.wildfiregames.com/0ad-0.0.23-alpha-unix-data.tar.xz
@@ -88,6 +91,7 @@ parts:
       - usr/share/themes/
       - usr/share/X11/
       - play0ad.launcher
+      - icon.png
     stage-packages:
       - libboost-filesystem1.58.0
       - libc6
