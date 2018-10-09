@@ -36,8 +36,15 @@ apps:
       - x11
 
 parts:
+  0ad-patches:
+    plugin: nil
+    source: patches
+    override-build: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/patches
+      cp *.patch $SNAPCRAFT_PART_INSTALL/patches/
+    override-prime: ""
   0ad-unix-build:
-    after: [ libsodium ]
+    after: [ 0ad-patches, libsodium ]
     plugin: nil
     source: https://releases.wildfiregames.com/0ad-0.0.23-alpha-unix-build.tar.xz
     build-packages:
@@ -65,8 +72,8 @@ parts:
       - pkg-config
       - zlib1g-dev
     override-build: |
-      patch -d . -p1 < ../../../patches/allow-build-with-root.patch
-      patch -d . -p1 < ../../../patches/use-sdl-semaphores.patch
+      patch -d . -p1 < $SNAPCRAFT_STAGE/patches/allow-build-with-root.patch
+      patch -d . -p1 < $SNAPCRAFT_STAGE/patches/use-sdl-semaphores.patch
       build/workspaces/update-workspaces.sh --with-system-nvtt -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
       make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT config=release -C build/workspaces/gcc
       P=binaries/system
