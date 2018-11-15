@@ -10,6 +10,7 @@ description: |
  graphics, detailed artwork, sound, and a flexible and powerful custom-built
  game engine.
 confinement: strict
+base: core18
 
 apps:
   0ad:
@@ -44,13 +45,10 @@ parts:
       cp *.patch $SNAPCRAFT_PART_INSTALL/patches/
     override-prime: ""
   0ad-unix-build:
-    after: [ 0ad-patches, libsodium ]
+    after: [ 0ad-patches ]
     plugin: nil
     source: https://releases.wildfiregames.com/0ad-0.0.23-alpha-unix-build.tar.xz
     build-packages:
-      - autoconf
-      - debhelper
-      - dpkg-dev
       - libboost-dev
       - libboost-filesystem-dev
       - libcurl4-gnutls-dev
@@ -62,14 +60,16 @@ parts:
       - libnvtt-dev
       - libogg-dev
       - libopenal-dev
-      - libpng12-dev
+      - libpng-dev
       - libsdl2-dev
+      - libsodium-dev
       - libvorbis-dev
       - libwxgtk3.0-dev
       - libxcursor-dev
       - libxml2-dev
       - patch
       - pkg-config
+      - python
       - zlib1g-dev
     override-build: |
       patch -d . -p1 < $SNAPCRAFT_STAGE/patches/allow-build-with-root.patch
@@ -104,21 +104,20 @@ parts:
       - play0ad.launcher
       - icon.png
     stage-packages:
-      - libboost-filesystem1.58.0
-      - libc6
+      - libboost-filesystem1.65.1
+      - libboost-system1.65.1
       - libcurl3-gnutls
       - libenet7
-      - libgcc1
       - libgl1-mesa-glx
-      - libgloox13v5
-      - libicu55
+      - libgloox15
+      - libicu60
       - libminiupnpc10
       - libnspr4
       - libnvtt2
       - libopenal1
-      - libpng12-0
+      - libpng16-16
       - libsdl2-2.0-0
-      - libstdc++6
+      - libsodium23
       - libvorbisfile3
       - libwxbase3.0-0v5
       - libwxgtk3.0-0v5
@@ -126,14 +125,3 @@ parts:
       - libxcursor1
       - libxml2
       - locales-all
-      - zlib1g
-  # As of https://trac.wildfiregames.com/changeset/21674, 0ad requires
-  # libsodium ≥ 1.0.14 to build. Ubuntu 16.04 has version 1.0.8, so we need
-  # to build a more recent version. When the build infrastructure switches to
-  # Ubuntu 18.04 (which has libsodium 1.0.16), this part can be removed.
-  libsodium:
-    plugin: autotools
-    source: https://download.libsodium.org/libsodium/releases/libsodium-1.0.16.tar.gz
-    configflags: [ --prefix=/usr ]
-    build-packages:
-      - pkg-config

@@ -19,6 +19,8 @@ export XLOCALEDIR="$SNAP/usr/share/X11/locale"
 
 export LOCPATH="$SNAP/usr/lib/locale"
 
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$SNAP/usr/lib/$ARCH/pulseaudio"
+
 CONFIG_DIR="$SNAP_USER_DATA/.config/0ad/config"
 [ -d "$CONFIG_DIR" ] || mkdir -p "$CONFIG_DIR"
 USER_CFG="$CONFIG_DIR/user.cfg"
