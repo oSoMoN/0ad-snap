@@ -94,6 +94,7 @@ parts:
   0ad-launcher:
     plugin: dump
     source: .
+    build-attributes: [ no-system-libraries ]
     prime:
       - etc/fonts/
       - lib/
