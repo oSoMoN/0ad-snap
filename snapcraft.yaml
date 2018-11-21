@@ -48,6 +48,7 @@ parts:
     after: [ 0ad-patches ]
     plugin: nil
     source: https://releases.wildfiregames.com/0ad-0.0.23-alpha-unix-build.tar.xz
+    build-attributes: [ no-system-libraries ]
     build-packages:
       - libboost-dev
       - libboost-filesystem-dev
