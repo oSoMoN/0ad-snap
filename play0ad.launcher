@@ -40,6 +40,15 @@ mkdir -p $XDG_DATA_HOME
 export XDG_CACHE_HOME=$SNAP_USER_DATA/.cache
 mkdir -p $XDG_CACHE_HOME
 
+# Make PulseAudio socket available inside the snap-specific $XDG_RUNTIME_DIR
+if [ -n "$XDG_RUNTIME_DIR" ]; then
+    pulsenative="pulse/native"
+    pulseaudio_sockpath="$XDG_RUNTIME_DIR/../$pulsenative"
+    if [ -S "$pulseaudio_sockpath" ]; then
+        export PULSE_SERVER="unix:${pulseaudio_sockpath}"
+    fi
+fi
+
 # Font Config and themes
 export FONTCONFIG_PATH=$SNAP/etc/fonts/conf.d
 export FONTCONFIG_FILE=$SNAP/etc/fonts/fonts.conf
