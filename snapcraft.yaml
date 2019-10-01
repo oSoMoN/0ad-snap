@@ -17,22 +17,22 @@ apps:
     command: play0ad.launcher
     desktop: 0ad.desktop
     plugs:
+      - audio-playback
       - home
       - network
       - network-bind
       - opengl
       - process-control
-      - pulseaudio
       - removable-media
       - screen-inhibit-control
       - x11
   atlas:
     command: play0ad.launcher -editor
     plugs:
+      - audio-playback
       - home
       - opengl
       - process-control
-      - pulseaudio
       - removable-media
       - x11
 
