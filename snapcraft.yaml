@@ -16,6 +16,7 @@ apps:
   0ad:
     command: play0ad.launcher
     desktop: 0ad.desktop
+    common-id: com.play0ad.zeroad
     plugs:
       - audio-playback
       - home
