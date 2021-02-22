@@ -1,14 +1,30 @@
 name: 0ad
-version: 0.0.23b-alpha
+version: 0.0.24b-alpha
 summary: Real-time strategy game of ancient warfare
 description: |
- 0 A.D. (pronounced "zero ey-dee") is a free, open-source, cross-platform
- real-time strategy (RTS) game of ancient warfare. In short, it is a
- historically-based war/economy game that allows players to relive or rewrite
- the history of Western civilizations, focusing on the years between 500 B.C.
- and 500 A.D. The project is highly ambitious, involving state-of-the-art 3D
- graphics, detailed artwork, sound, and a flexible and powerful custom-built
- game engine.
+ 0 A.D. (pronounced “zero-ey-dee”) is a free, open-source, historical
+ Real Time Strategy (RTS) game currently under development by Wildfire Games,
+ a global group of volunteer game developers.
+ As the leader of an ancient civilization, you must gather the resources
+ you need to raise a military force and dominate your enemies.
+ .
+ “0 A.D.” is a time period that never actually existed: In the usual calendar,
+ one goes from 1 B.C. to 1 A.D. and skips zero. This reflects the historical
+ fiction in the game: Who would have won if all the factions were pitted
+ against each other when each of them was at its prime?
+ .
+ We intend to portray some of the major civilizations over the millennium of
+ 500 B.C. to 500 A.D. (Hence the midpoint, zero.) That is an ambitious prospect,
+ so in the first edition of 0 A.D. we focus on the last five centuries B.C.
+ Perhaps in future expansion packs, more civilizations will be added,
+ along with additional gameplay features.
+ .
+ We put a strong emphasis on historical accuracy while developing 0 A.D.
+ We plan all our units and all our buildings based on reconstructions of how
+ the units and the buildings might have looked like in the ancient world.
+ We even name them in the original languages, such as Greek and Latin.
+ But it’s worth remembering that any game should be fun to play, so,
+ in many cases, we preferred playability over historical accuracy.
 confinement: strict
 base: core18
 
