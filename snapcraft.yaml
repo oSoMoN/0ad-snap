@@ -50,17 +50,20 @@ parts:
   0ad-unix-build:
     after: [ 0ad-patches ]
     plugin: nil
-    source: https://releases.wildfiregames.com/0ad-0.0.23b-alpha-unix-build.tar.xz
+    source: https://releases.wildfiregames.com/0ad-0.0.24b-alpha-unix-build.tar.xz
+    source-checksum: sha1/d6f0e2a87d59d6ffd46aee2ac450bde9b6df3715
     build-packages:
+      - cargo
+      - cmake
       - libboost-dev
       - libboost-filesystem-dev
       - libcurl4-gnutls-dev
       - libenet-dev
+      - libfmt-dev
       - libgloox-dev
       - libicu-dev
       - libminiupnpc-dev
       - libnspr4-dev
-      - libnvtt-dev
       - libogg-dev
       - libopenal-dev
       - libpng-dev
@@ -73,15 +76,16 @@ parts:
       - patch
       - pkg-config
       - python
+      - rustc
       - zlib1g-dev
     override-build: |
       patch -d . -p1 < $SNAPCRAFT_STAGE/patches/allow-build-with-root.patch
-      patch -d . -p1 < $SNAPCRAFT_STAGE/patches/use-sdl-semaphores.patch
-      build/workspaces/update-workspaces.sh --with-system-nvtt -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
+      build/workspaces/update-workspaces.sh -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
       make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT config=release -C build/workspaces/gcc
       P=binaries/system
       mkdir -p $SNAPCRAFT_PART_INSTALL/$P
-      cp $P/pyrogenesis $P/ActorEditor $P/libAtlasUI.so $P/libCollada.so $P/libmozjs38-ps-release.so $P/readme.txt $SNAPCRAFT_PART_INSTALL/$P/
+      cp $P/libnvcore.so $P/libnvimage.so $P/libnvmath.so $P/libnvtt.so $SNAPCRAFT_PART_INSTALL/$P/
+      cp $P/pyrogenesis $P/ActorEditor $P/libAtlasUI.so $P/libCollada.so $P/libmozjs78-ps-release.so $P/readme.txt $SNAPCRAFT_PART_INSTALL/$P/
       P=binaries/data/l10n
       mkdir -p $SNAPCRAFT_PART_INSTALL/$P
       cp $P/*.po $SNAPCRAFT_PART_INSTALL/$P/
@@ -89,7 +93,8 @@ parts:
       sed -i -e "s#Icon=0ad#Icon=/icon.png#" $SNAPCRAFT_PART_INSTALL/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://releases.wildfiregames.com/0ad-0.0.23b-alpha-unix-data.tar.xz
+    source: https://releases.wildfiregames.com/0ad-0.0.24b-alpha-unix-data.tar.xz
+    source-checksum: sha1/ea21e5900906f1211d6cb6c1d3bb3dea07afd348
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
@@ -116,7 +121,6 @@ parts:
       - libicu60
       - libminiupnpc10
       - libnspr4
-      - libnvtt2
       - libopenal1
       - libpng16-16
       - libsdl2-2.0-0
