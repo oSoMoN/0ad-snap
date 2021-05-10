@@ -55,6 +55,10 @@ apps:
       - removable-media
       - x11
 
+layout:
+  /usr/share/libdrm:
+    bind: $SNAP/usr/share/libdrm
+
 parts:
   0ad-patches:
     plugin: nil
@@ -131,6 +135,7 @@ parts:
       - libboost-filesystem1.65.1
       - libboost-system1.65.1
       - libcurl3-gnutls
+      - libdrm-common
       - libenet7
       - libgl1-mesa-glx
       - libgloox15
