@@ -127,6 +127,7 @@ parts:
       - lib/
       - usr/lib/
       - usr/share/fonts/
+      - usr/share/libdrm/
       - usr/share/themes/
       - usr/share/X11/
       - play0ad.launcher
