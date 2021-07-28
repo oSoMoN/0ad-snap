@@ -1,5 +1,5 @@
 name: 0ad
-version: 0.0.24b-alpha
+version: 0.0.25-rc4-25842-alpha
 summary: Real-time strategy game of ancient warfare
 description: |
  0 A.D. (pronounced “zero-ey-dee”) is a free, open-source, historical
@@ -70,8 +70,8 @@ parts:
   0ad-unix-build:
     after: [ 0ad-patches ]
     plugin: nil
-    source: https://releases.wildfiregames.com/0ad-0.0.24b-alpha-unix-build.tar.xz
-    source-checksum: sha1/d6f0e2a87d59d6ffd46aee2ac450bde9b6df3715
+    source: https://releases.wildfiregames.com/rc/0ad-0.0.25-rc4-25842-alpha-unix-build.tar.xz
+    source-checksum: sha1/8b8db723b7597ec1ff92fa5f888e9d1eec6ddcb9
     build-packages:
       - cargo
       - cmake
@@ -105,7 +105,7 @@ parts:
       P=binaries/system
       mkdir -p $SNAPCRAFT_PART_INSTALL/$P
       cp $P/libnvcore.so $P/libnvimage.so $P/libnvmath.so $P/libnvtt.so $SNAPCRAFT_PART_INSTALL/$P/
-      cp $P/pyrogenesis $P/ActorEditor $P/libAtlasUI.so $P/libCollada.so $P/libmozjs78-ps-release.so $P/readme.txt $SNAPCRAFT_PART_INSTALL/$P/
+      cp $P/pyrogenesis $P/ActorEditor $P/libAtlasUI.so $P/libCollada.so $P/libmozjs*-ps-release.so $P/readme.txt $SNAPCRAFT_PART_INSTALL/$P/
       P=binaries/data/l10n
       mkdir -p $SNAPCRAFT_PART_INSTALL/$P
       cp $P/*.po $SNAPCRAFT_PART_INSTALL/$P/
@@ -113,8 +113,8 @@ parts:
       sed -i -e "s#Icon=0ad#Icon=/icon.png#" $SNAPCRAFT_PART_INSTALL/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://releases.wildfiregames.com/0ad-0.0.24b-alpha-unix-data.tar.xz
-    source-checksum: sha1/ea21e5900906f1211d6cb6c1d3bb3dea07afd348
+    source: https://releases.wildfiregames.com/rc/0ad-0.0.25-rc4-25842-alpha-unix-data.tar.xz
+    source-checksum: sha1/923ee2d273396333cd4d2083a01ff00b6fb48475
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
