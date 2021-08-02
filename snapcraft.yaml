@@ -35,6 +35,7 @@ apps:
     common-id: com.play0ad.zeroad
     plugs:
       - audio-playback
+      - desktop
       - home
       - network
       - network-bind
@@ -48,6 +49,7 @@ apps:
     command: play0ad.launcher -editor
     plugs:
       - audio-playback
+      - desktop
       - home
       - opengl
       - process-control
