@@ -41,7 +41,6 @@ apps:
       - network-bind
       - opengl
       - process-control
-      - pulseaudio # remove once snapd 2.41 is available everywhere
       - removable-media
       - screen-inhibit-control
       - x11
@@ -53,7 +52,6 @@ apps:
       - home
       - opengl
       - process-control
-      - pulseaudio # remove once snapd 2.41 is available everywhere
       - removable-media
       - x11
 
