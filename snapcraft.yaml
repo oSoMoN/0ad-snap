@@ -25,6 +25,7 @@ description: |
  We even name them in the original languages, such as Greek and Latin.
  But it’s worth remembering that any game should be fun to play, so,
  in many cases, we preferred playability over historical accuracy.
+license: GPL-2.0+
 confinement: strict
 base: core18
 
