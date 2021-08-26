@@ -1,5 +1,5 @@
 name: 0ad
-version: 0.0.25-alpha
+version: 0.0.25b-alpha
 summary: Real-time strategy game of ancient warfare
 description: |
  0 A.D. (pronounced “zero-ey-dee”) is a free, open-source, historical
@@ -71,8 +71,8 @@ parts:
   0ad-unix-build:
     after: [ 0ad-patches ]
     plugin: nil
-    source: https://releases.wildfiregames.com/0ad-0.0.25-alpha-unix-build.tar.xz
-    source-checksum: sha1/06872f2bd3b1b0d336a94782ecf9feff4179ae3b
+    source: https://releases.wildfiregames.com/0ad-0.0.25b-alpha-unix-build.tar.xz
+    source-checksum: sha1/130444c15e29c7fa1333b8719ae7c7da36741a26
     build-packages:
       - cargo
       - cmake
@@ -114,8 +114,8 @@ parts:
       sed -i -e "s#Icon=0ad#Icon=/icon.png#" $SNAPCRAFT_PART_INSTALL/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://releases.wildfiregames.com/0ad-0.0.25-alpha-unix-data.tar.xz
-    source-checksum: sha1/d3a49fa3a9c7f28583178e3d0ad723d75a486428
+    source: https://releases.wildfiregames.com/0ad-0.0.25b-alpha-unix-data.tar.xz
+    source-checksum: sha1/c56cc4b51f13323521318204aa69dd1cb5dd010f
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
