@@ -1,0 +1,16 @@
+Description: Allow running 0ad as root, to generate archivebuilds at build time
+Forwarded: no
+Author: Olivier Tilloy <olivier@tilloy.net>
+Last-Update: 2019-08-05
+
+--- a/source/main.cpp
++++ b/source/main.cpp
+@@ -744,7 +744,7 @@ extern "C" __attribute__((visibility ("d
+ 
+ extern "C" int main(int argc, char* argv[])
+ {
+-#if OS_UNIX
++#if 0
+ 	// Don't allow people to run the game with root permissions,
+ 	//	because bad things can happen, check before we do anything
+ 	if (geteuid() == 0)

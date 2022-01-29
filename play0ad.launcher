@@ -1,0 +1,69 @@
+#!/bin/bash
+
+#export SDL_DEBUG=1
+#export LIBGL_DEBUG=verbose
+
+if [ "$SNAP_ARCH" == "amd64" ]; then
+  ARCH="x86_64-linux-gnu"
+elif [ "$SNAP_ARCH" == "armhf" ]; then
+  ARCH="arm-linux-gnueabihf"
+elif [ "$SNAP_ARCH" == "arm64" ]; then
+  ARCH="aarch64-linux-gnu"
+else
+  ARCH="$SNAP_ARCH-linux-gnu"
+fi
+
+export LIBGL_DRIVERS_PATH="$SNAP/usr/lib/$ARCH/dri"
+
+export XLOCALEDIR="$SNAP/usr/share/X11/locale"
+
+export LOCPATH="$SNAP/usr/lib/locale"
+
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$SNAP/usr/lib/$ARCH/pulseaudio"
+
+CONFIG_DIR="$SNAP_USER_DATA/.config/0ad/config"
+[ -d "$CONFIG_DIR" ] || mkdir -p "$CONFIG_DIR"
+USER_CFG="$CONFIG_DIR/user.cfg"
+[ -f "$USER_CFG" ] || touch "$USER_CFG"
+
+needs_update=true
+. ~/.last_revision 2> /dev/null || true
+if [ "$SNAP_LAST_REVISION" = "$SNAP_REVISION" ]; then
+  needs_update=false
+fi
+[ $needs_update = true ] && echo "SNAP_LAST_REVISION=$SNAP_REVISION" > ~/.last_revision
+
+# XDG folders
+export XDG_DATA_HOME=$SNAP_USER_DATA/.local/share
+export XDG_DATA_DIRS=$XDG_DATA_HOME:$XDG_DATA_DIRS
+mkdir -p $XDG_DATA_HOME
+export XDG_CACHE_HOME=$SNAP_USER_DATA/.cache
+mkdir -p $XDG_CACHE_HOME
+
+# Make PulseAudio socket available inside the snap-specific $XDG_RUNTIME_DIR
+if [ -n "$XDG_RUNTIME_DIR" ]; then
+    pulsenative="pulse/native"
+    pulseaudio_sockpath="$XDG_RUNTIME_DIR/../$pulsenative"
+    if [ -S "$pulseaudio_sockpath" ]; then
+        export PULSE_SERVER="unix:${pulseaudio_sockpath}"
+    fi
+fi
+
+# Font Config and themes
+export FONTCONFIG_PATH=$SNAP/etc/fonts/conf.d
+export FONTCONFIG_FILE=$SNAP/etc/fonts/fonts.conf
+if [ $needs_update = true ]; then
+  rm -rf $XDG_DATA_HOME/{fontconfig,fonts,fonts-*,themes,.themes}
+  ln -sf $SNAP/usr/share/{fontconfig,fonts,fonts-*,themes} $XDG_DATA_HOME
+  ln -sfn $SNAP/usr/share/themes $SNAP_USER_DATA/.themes
+fi
+
+# Gdk-pixbuf loaders
+export GDK_PIXBUF_MODULE_FILE=$XDG_CACHE_HOME/gdk-pixbuf-loaders.cache
+export GDK_PIXBUF_MODULEDIR=$SNAP/usr/lib/$ARCH/gdk-pixbuf-2.0/2.10.0/loaders
+if [ $needs_update = true ]; then
+  rm -f $GDK_PIXBUF_MODULE_FILE
+  $SNAP/usr/lib/$ARCH/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > $GDK_PIXBUF_MODULE_FILE
+fi
+
+exec "$SNAP/binaries/system/pyrogenesis" "$@"

@@ -1,0 +1,34 @@
+Description: Do not build spidermonkey in debug mode, to save time and disk space
+Forwarded: no
+Author: Olivier Tilloy <olivier@tilloy.net>
+Last-Update: 2022-01-28
+
+--- a/libraries/source/spidermonkey/build.sh
++++ b/libraries/source/spidermonkey/build.sh
+@@ -119,7 +119,7 @@ else
+ fi
+ 
+ # Debug version of SM is broken on FreeBSD.
+-if [ "$(uname -s)" != "FreeBSD" ]; then
++if false; then
+   mkdir -p build-debug
+   cd build-debug
+   # SM configure checks for autoconf, but we don't actually need it.
+@@ -187,7 +187,7 @@ fi
+ mkdir -p "${INCLUDE_DIR_RELEASE}"
+ cp -R -L "${FOLDER}"/build-release/dist/include/* "${INCLUDE_DIR_RELEASE}/"
+ 
+-if [ "$(uname -s)" != "FreeBSD" ]; then
++if false; then
+   mkdir -p "${INCLUDE_DIR_DEBUG}"
+   cp -R -L "${FOLDER}"/build-debug/dist/include/* "${INCLUDE_DIR_DEBUG}/"
+ fi
+@@ -228,7 +228,7 @@ else
+   # Copy shared libs to both lib/ and binaries/ so the compiler and executable (resp.) can find them.
+   cp -L "${FOLDER}/build-${REL}/js/src/build/${LIB_PREFIX}${LIB_NAME}-${REL}${LIB_SUFFIX}" "lib/${LIB_PREFIX}${LIB_NAME}-${REL}${LIB_SUFFIX}"
+   cp -L "${FOLDER}/build-${REL}/js/src/build/${LIB_PREFIX}${LIB_NAME}-${REL}${LIB_SUFFIX}" "../../../binaries/system/${LIB_PREFIX}${LIB_NAME}-${REL}${LIB_SUFFIX}"
+-  if [ "$(uname -s)" != "FreeBSD" ]; then
++  if false; then
+     cp -L "${FOLDER}/build-${DEB}/js/src/build/${LIB_PREFIX}${LIB_NAME}-${DEB}${LIB_SUFFIX}" "../../../binaries/system/${LIB_PREFIX}${LIB_NAME}-${DEB}${LIB_SUFFIX}"
+     cp -L "${FOLDER}/build-${DEB}/js/src/build/${LIB_PREFIX}${LIB_NAME}-${DEB}${LIB_SUFFIX}" "lib/${LIB_PREFIX}${LIB_NAME}-${DEB}${LIB_SUFFIX}"
+   fi

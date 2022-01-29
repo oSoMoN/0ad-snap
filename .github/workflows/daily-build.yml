@@ -1,0 +1,25 @@
+name: Daily snap build
+
+on:
+  schedule:
+    # Run every 24 hours, at 6:00 UTC.
+    - cron: '0 6 * * *'
+  # Allow running manually, for testing purposes.
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}
+
+jobs:
+  daily-snap:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: snap
+      - uses: snapcore/action-build@v1
+        id: build-new-snap-daily
+      - uses: snapcore/action-publish@v1
+        with:
+          store_login: ${{ secrets.SNAPSTORE_LOGIN }}
+          snap: ${{ steps.build-new-snap-daily.outputs.snap }}
+          release: edge
