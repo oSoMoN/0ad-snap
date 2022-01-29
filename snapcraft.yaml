@@ -138,7 +138,7 @@ parts:
       cp build/resources/0ad.desktop $SNAPCRAFT_PART_INSTALL/
       cp build/resources/0ad.png $SNAPCRAFT_PART_INSTALL/
       sed -i -e "s#Icon=0ad#Icon=/0ad.png#" $SNAPCRAFT_PART_INSTALL/0ad.desktop
-      cp play0ad.launcher $SNAPCRAFT_PART_INSTALL/
+      cp $SNAPCRAFT_PROJECT_DIR/play0ad.launcher $SNAPCRAFT_PART_INSTALL/
   dependencies:
     plugin: nil
     prime:
