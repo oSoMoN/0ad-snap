@@ -2,8 +2,9 @@ name: Daily snap build
 
 on:
   schedule:
-    # Run every 24 hours, at 6:00 UTC.
-    - cron: '0 6 * * *'
+    # Run every 24 hours, at 4:30 UTC.
+    # SVN imports in https://github.com/0ad/0ad/ happen daily at 4:00 UTC.
+    - cron: '30 4 * * *'
   # Allow running manually, for testing purposes.
   workflow_dispatch:
 
@@ -15,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: snap
+          ref: main
       - uses: snapcore/action-build@v1
         id: build-new-snap-daily
       - uses: snapcore/action-publish@v1
