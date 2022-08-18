@@ -61,15 +61,7 @@ layout:
     bind: $SNAP/usr/share/libdrm
 
 parts:
-  0ad-patches:
-    plugin: nil
-    source: patches
-    override-build: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/patches
-      cp *.patch $SNAPCRAFT_PART_INSTALL/patches/
-    override-prime: ""
   0ad-unix-build:
-    after: [ 0ad-patches ]
     plugin: nil
     source: https://releases.wildfiregames.com/rc/0ad-0.0.26-rc2-27003-alpha-unix-build.tar.xz
     source-checksum: sha1/e6f8dec9b4247c512acfb2f4895f641aa87d359a
@@ -101,7 +93,7 @@ parts:
       - rustc
       - zlib1g-dev
     override-build: |
-      patch -d . -p1 < $SNAPCRAFT_STAGE/patches/allow-build-with-root.patch
+      patch -d . -p1 < $SNAPCRAFT_PROJECT_DIR/patches/allow-build-with-root.patch
       env SHELL=/bin/sh build/workspaces/update-workspaces.sh -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
       make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT config=release -C build/workspaces/gcc
       P=binaries/system
