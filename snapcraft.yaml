@@ -108,6 +108,10 @@ parts:
       rm -rf .git
       rm -rf binaries/system/*.bat binaries/system/*.dll binaries/system/*.lib binaries/system/*.pdb
       rm -rf libraries/osx libraries/win32
+      # Temporarily remove unused files that require a newer version of
+      # libfmt-dev than the version available in Ubuntu 18.04 to build
+      # (see https://trac.wildfiregames.com/changeset/27329)
+      rm -f source/ps/containers/StaticVector.h source/ps/containers/tests/test_StaticVector.h
     override-build: |
       rm -rf $SNAPCRAFT_PART_SRC # Nasty, but saves a lot of space
       patch -d . -p1 < $SNAPCRAFT_PROJECT_DIR/patches/allow-build-with-root.patch
