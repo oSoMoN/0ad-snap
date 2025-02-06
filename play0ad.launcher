@@ -13,9 +13,9 @@ else
   ARCH="$SNAP_ARCH-linux-gnu"
 fi
 
-export LIBGL_DRIVERS_PATH="$SNAP/usr/lib/$ARCH/dri"
-
-export XLOCALEDIR="$SNAP/usr/share/X11/locale"
+# Work around https://github.com/canonical/mesa-2404/issues/35
+# Once the issue is fixed in the mesa-2024 snap, this export can be removed
+export XLOCALEDIR="$SNAP/gpu-2404/X11/locale"
 
 export LOCPATH="$SNAP/usr/lib/locale"
 
@@ -27,18 +27,19 @@ USER_CFG="$CONFIG_DIR/user.cfg"
 [ -f "$USER_CFG" ] || touch "$USER_CFG"
 
 needs_update=true
-. ~/.last_revision 2> /dev/null || true
+# shellcheck source=/dev/null
+source ~/.last_revision 2> /dev/null || true
 if [ "$SNAP_LAST_REVISION" = "$SNAP_REVISION" ]; then
   needs_update=false
 fi
 [ $needs_update = true ] && echo "SNAP_LAST_REVISION=$SNAP_REVISION" > ~/.last_revision
 
 # XDG folders
-export XDG_DATA_HOME=$SNAP_USER_DATA/.local/share
-export XDG_DATA_DIRS=$XDG_DATA_HOME:$XDG_DATA_DIRS
-mkdir -p $XDG_DATA_HOME
-export XDG_CACHE_HOME=$SNAP_USER_DATA/.cache
-mkdir -p $XDG_CACHE_HOME
+export XDG_DATA_HOME="$SNAP_USER_DATA/.local/share"
+export XDG_DATA_DIRS="$XDG_DATA_HOME:$SNAP/data-dir:$XDG_DATA_DIRS"
+mkdir -p "$XDG_DATA_HOME"
+export XDG_CACHE_HOME="$SNAP_USER_DATA/.cache"
+mkdir -p "$XDG_CACHE_HOME"
 
 # Make PulseAudio socket available inside the snap-specific $XDG_RUNTIME_DIR
 if [ -n "$XDG_RUNTIME_DIR" ]; then
@@ -50,20 +51,34 @@ if [ -n "$XDG_RUNTIME_DIR" ]; then
 fi
 
 # Font Config and themes
-export FONTCONFIG_PATH=$SNAP/etc/fonts/conf.d
-export FONTCONFIG_FILE=$SNAP/etc/fonts/fonts.conf
+export FONTCONFIG_PATH="$SNAP/etc/fonts/conf.d"
+export FONTCONFIG_FILE="$SNAP/etc/fonts/fonts.conf"
 if [ $needs_update = true ]; then
-  rm -rf $XDG_DATA_HOME/{fontconfig,fonts,fonts-*,themes,.themes}
-  ln -sf $SNAP/usr/share/{fontconfig,fonts,fonts-*,themes} $XDG_DATA_HOME
-  ln -sfn $SNAP/usr/share/themes $SNAP_USER_DATA/.themes
+  rm -rf "$XDG_DATA_HOME"/{fontconfig,fonts,fonts-*,themes,.themes}
+  ln -sf "$SNAP"/usr/share/{fonts,themes} "$XDG_DATA_HOME"
+  ln -sfn "$SNAP"/usr/share/themes "$SNAP_USER_DATA/.themes"
+fi
+
+# Build mime.cache
+if [ $needs_update = true ]; then
+  rm -rf "$XDG_DATA_HOME/mime"
+  cp --preserve=timestamps -dR "$SNAP/usr/share/mime" "$XDG_DATA_HOME/"
+  "$SNAP"/usr/bin/update-mime-database "$XDG_DATA_HOME/mime"
 fi
 
 # Gdk-pixbuf loaders
-export GDK_PIXBUF_MODULE_FILE=$XDG_CACHE_HOME/gdk-pixbuf-loaders.cache
-export GDK_PIXBUF_MODULEDIR=$SNAP/usr/lib/$ARCH/gdk-pixbuf-2.0/2.10.0/loaders
+export GDK_PIXBUF_MODULE_FILE="$XDG_CACHE_HOME/gdk-pixbuf-loaders.cache"
+export GDK_PIXBUF_MODULEDIR="$SNAP/usr/lib/$ARCH/gdk-pixbuf-2.0/2.10.0/loaders"
 if [ $needs_update = true ]; then
-  rm -f $GDK_PIXBUF_MODULE_FILE
-  $SNAP/usr/lib/$ARCH/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders > $GDK_PIXBUF_MODULE_FILE
+  rm -f "$GDK_PIXBUF_MODULE_FILE"
+  "$SNAP/usr/lib/$ARCH/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders" > "$GDK_PIXBUF_MODULE_FILE"
+fi
+
+# Compile GLib schemas
+if [ $needs_update = true ]; then
+  mkdir -p "$XDG_DATA_HOME/glib-2.0/schemas"
+  rm -f "$XDG_DATA_HOME/glib-2.0/schemas/*"
+  "$SNAP/usr/lib/$ARCH/glib-2.0/glib-compile-schemas" --targetdir="$XDG_DATA_HOME/glib-2.0/schemas" "$SNAP/usr/share/glib-2.0/schemas"
 fi
 
 exec "$SNAP/binaries/system/pyrogenesis" "$@"

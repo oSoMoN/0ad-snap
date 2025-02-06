@@ -1,7 +1,7 @@
 Description: Allow building 0ad as root/fakeroot
-Forwarded: no
+Forwarded: not-needed
 Author: Rico Tzschichholz <ricotz@ubuntu.com>
-Last-Update: 2014-10-13
+Last-Update: 2025-02-01
 
 --- a/build/workspaces/update-workspaces.sh
 +++ b/build/workspaces/update-workspaces.sh
@@ -9,10 +9,10 @@ Last-Update: 2014-10-13
  #!/bin/sh
  
 -if [ "$(id -u)" = "0" ]; then
--   echo "Running as root will mess up file permissions. Aborting ..." 1>&2
--   exit 1
+-	echo "Running as root will mess up file permissions. Aborting ..." 1>&2
+-	exit 1
 -fi
 -
  die()
  {
-   echo ERROR: $*
+ 	echo ERROR: "$*"

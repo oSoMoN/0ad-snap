@@ -1,5 +1,5 @@
 name: 0ad
-version: 0.0.26-alpha
+version: 0.27.0-alpha
 summary: Real-time strategy game of ancient warfare
 description: |
  0 A.D. (pronounced “zero-ey-dee”) is a free, open-source, historical
@@ -27,10 +27,12 @@ description: |
  in many cases, we preferred playability over historical accuracy.
 license: GPL-2.0+
 confinement: strict
-base: core18
+base: core24
 
 apps:
   0ad:
+    command-chain:
+      - bin/gpu-2404-wrapper
     command: play0ad.launcher
     desktop: 0ad.desktop
     common-id: com.play0ad.zeroad
@@ -41,74 +43,90 @@ apps:
       - network
       - network-bind
       - opengl
-      - process-control
       - removable-media
       - screen-inhibit-control
       - x11
   atlas:
+    command-chain:
+      - bin/gpu-2404-wrapper
     command: play0ad.launcher -editor
     plugs:
       - audio-playback
       - desktop
       - home
       - opengl
-      - process-control
       - removable-media
       - x11
 
+plugs:
+  gpu-2404:
+    interface: content
+    target: $SNAP/gpu-2404
+    default-provider: mesa-2404
+  icon-themes:
+    interface: content
+    target: $SNAP/data-dir/icons
+    default-provider: gtk-common-themes
+
 layout:
-  /usr/share/libdrm:
-    bind: $SNAP/usr/share/libdrm
+  /usr/share/X11/XErrorDB:
+    symlink: $SNAP/gpu-2404/X11/XErrorDB
 
 parts:
   0ad-unix-build:
     plugin: nil
-    source: https://releases.wildfiregames.com/0ad-0.0.26-alpha-unix-build.tar.xz
-    source-checksum: sha1/e3b62b28cd61ee97f6ae989fc9ba351e6405264c
+    source: https://releases.wildfiregames.com/0ad-0.27.0-unix-build.tar.xz
+    source-checksum: sha1/8c02295fff7363df0120dc060dc07ee9155ecbf1
     build-packages:
+      - binutils
       - cargo
       - cmake
+      - findutils
+      - g++
       - libboost-dev
       - libboost-filesystem-dev
       - libcurl4-gnutls-dev
       - libenet-dev
       - libfmt-dev
-      - libfreetype6-dev
+      - libfreetype-dev
       - libgloox-dev
-      - libicu-dev
       - libminiupnpc-dev
-      - libnspr4-dev
       - libogg-dev
       - libopenal-dev
       - libpng-dev
       - libsdl2-dev
       - libsodium-dev
       - libvorbis-dev
-      - libwxgtk3.0-dev
-      - libxcursor-dev
+      - libwxgtk3.2-dev
       - libxml2-dev
+      - llvm
+      - m4
+      - make
       - patch
       - pkg-config
-      - python
+      - python3
       - rustc
+      - uuid-dev
       - zlib1g-dev
     override-build: |
-      patch -d . -p1 < $SNAPCRAFT_PROJECT_DIR/patches/allow-build-with-root.patch
-      env SHELL=/bin/sh build/workspaces/update-workspaces.sh -j$SNAPCRAFT_PARALLEL_BUILD_COUNT
-      make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT config=release -C build/workspaces/gcc
+      env SHELL=/bin/sh libraries/build-source-libs.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
+      patch -d . -p1 < ${CRAFT_PROJECT_DIR}/patches/allow-build-with-root.patch
+      build/workspaces/update-workspaces.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
+      make -j${CRAFT_PARALLEL_BUILD_COUNT} config=release -C build/workspaces/gcc
       P=binaries/system
-      mkdir -p $SNAPCRAFT_PART_INSTALL/$P
-      cp $P/libnvcore.so $P/libnvimage.so $P/libnvmath.so $P/libnvtt.so $SNAPCRAFT_PART_INSTALL/$P/
-      cp $P/pyrogenesis $P/ActorEditor $P/libAtlasUI.so $P/libCollada.so $P/libmozjs*-ps-release.so $P/readme.txt $SNAPCRAFT_PART_INSTALL/$P/
+      mkdir -p ${CRAFT_PART_INSTALL}/${P}
+      cp ${P}/libnvcore.so ${P}/libnvimage.so ${P}/libnvmath.so ${P}/libnvtt.so ${CRAFT_PART_INSTALL}/${P}/
+      cp ${P}/pyrogenesis ${P}/ActorEditor ${P}/libAtlasUI.so ${P}/libCollada.so ${P}/libmozjs*-release.so ${P}/readme.txt ${CRAFT_PART_INSTALL}/${P}/
+      find ${CRAFT_PART_INSTALL}/${P} -type f -executable -exec strip --strip-all {} +
       P=binaries/data/l10n
-      mkdir -p $SNAPCRAFT_PART_INSTALL/$P
-      cp $P/*.po $SNAPCRAFT_PART_INSTALL/$P/
-      cp build/resources/0ad.desktop $SNAPCRAFT_PART_INSTALL/
-      sed -i -e "s#Icon=0ad#Icon=/icon.png#" $SNAPCRAFT_PART_INSTALL/0ad.desktop
+      mkdir -p ${CRAFT_PART_INSTALL}/${P}
+      cp ${P}/*.po ${CRAFT_PART_INSTALL}/${P}/
+      cp build/resources/0ad.desktop build/resources/0ad.png ${CRAFT_PART_INSTALL}/
+      sed -i -e "s#Icon=0ad#Icon=/0ad.png#" ${CRAFT_PART_INSTALL}/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://releases.wildfiregames.com/0ad-0.0.26-alpha-unix-data.tar.xz
-    source-checksum: sha1/0d6c960aa8d2396ef023752ca1b91f70ec8a7b2d
+    source: https://releases.wildfiregames.com/0ad-0.27.0-unix-data.tar.xz
+    source-checksum: sha1/5f532c742b4050f4380c83a7a7d8278e367f42de
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
@@ -118,34 +136,42 @@ parts:
     source: .
     prime:
       - etc/fonts/
-      - lib/
+      - usr/bin/update-mime-database
       - usr/lib/
+      - usr/share/glib-2.0/schemas
       - usr/share/fonts/
-      - usr/share/libdrm/
+      - usr/share/mime/
       - usr/share/themes/
-      - usr/share/X11/
       - play0ad.launcher
-      - icon.png
     stage-packages:
-      - libboost-filesystem1.65.1
-      - libboost-system1.65.1
-      - libcurl3-gnutls
-      - libdrm-common
+      - libboost-filesystem1.83.0
+      - libcurl3t64-gnutls
       - libenet7
+      - libfmt9
       - libfreetype6
-      - libgl1-mesa-glx
-      - libgloox15
-      - libicu60
-      - libminiupnpc10
-      - libnspr4
+      - libglib2.0-0t64
+      - libgloox18
+      - libgtk-3-common
+      - libminiupnpc17
       - libopenal1
-      - libpng16-16
+      - libpng16-16t64
       - libsdl2-2.0-0
       - libsodium23
+      - libvorbis0a
+      - libvorbisenc2
       - libvorbisfile3
-      - libwxbase3.0-0v5
-      - libwxgtk3.0-0v5
-      - libx11-6
+      - libwxbase3.2-1t64
+      - libwxgtk-gl3.2-1t64
+      - libwxgtk3.2-1t64
       - libxcursor1
-      - libxml2
       - locales-all
+      - shared-mime-info
+  gpu-2404:
+    after: [0ad-launcher]
+    source: https://github.com/canonical/gpu-snap.git
+    plugin: dump
+    override-prime: |
+      craftctl default
+      ${CRAFT_PART_SRC}/bin/gpu-2404-cleanup mesa-2404
+    prime:
+      - bin/gpu-2404-wrapper
