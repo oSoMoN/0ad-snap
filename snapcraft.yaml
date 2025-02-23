@@ -1,5 +1,5 @@
 name: 0ad
-version: 0.27.0-alpha
+adopt-info: 0ad-unix-build
 summary: Real-time strategy game of ancient warfare
 description: |
  0 A.D. (pronounced “zero-ey-dee”) is a free, open-source, historical
@@ -75,14 +75,15 @@ layout:
 parts:
   0ad-unix-build:
     plugin: nil
-    source: https://releases.wildfiregames.com/0ad-0.27.0-unix-build.tar.xz
-    source-checksum: sha1/8c02295fff7363df0120dc060dc07ee9155ecbf1
+    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-build.tar.xz
+    source-checksum: sha1/71cf64111674d22ce62d7bb2f82a5c3f9bc22860
     build-packages:
       - binutils
       - cargo
       - cmake
       - findutils
       - g++
+      - grep
       - libboost-dev
       - libboost-filesystem-dev
       - libcurl4-gnutls-dev
@@ -106,8 +107,12 @@ parts:
       - pkg-config
       - python3
       - rustc
+      - sed
       - uuid-dev
       - zlib1g-dev
+    override-pull: |
+      craftctl default
+      craftctl set version="$(grep -m1 VERSION source/lib/build_version.h | sed 's/^.*"\(.*\)"$/\1/')-dev"
     override-build: |
       env SHELL=/bin/sh libraries/build-source-libs.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
       patch -d . -p1 < ${CRAFT_PROJECT_DIR}/patches/allow-build-with-root.patch
@@ -125,8 +130,8 @@ parts:
       sed -i -e "s#Icon=0ad#Icon=/0ad.png#" ${CRAFT_PART_INSTALL}/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://releases.wildfiregames.com/0ad-0.27.0-unix-data.tar.xz
-    source-checksum: sha1/5f532c742b4050f4380c83a7a7d8278e367f42de
+    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-data.tar.xz
+    source-checksum: sha1/06167de82f62180190751b4e19d03c64ca0cecd7
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
