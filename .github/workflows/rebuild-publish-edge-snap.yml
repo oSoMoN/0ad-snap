@@ -1,0 +1,31 @@
+name: Rebuild and publish the edge snap
+
+on:
+  push:
+    branches:
+      - 'edge'
+  # Allow running manually, for testing purposes
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}
+
+jobs:
+  rebuild-and-publish:
+    strategy:
+      matrix:
+        # build for amd64 and arm64
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: edge
+      - uses: snapcore/action-build@v1
+        id: build
+      - uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPSTORE_LOGIN }}
+        with:
+          snap: ${{ steps.build.outputs.snap }}
+          release: edge
+
