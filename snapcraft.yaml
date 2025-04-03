@@ -115,7 +115,6 @@ parts:
       craftctl set version="$(grep -m1 VERSION source/lib/build_version.h | sed 's/^.*"\(.*\)"$/\1/')-dev"
     override-build: |
       env SHELL=/bin/sh libraries/build-source-libs.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
-      patch -d . -p1 < ${CRAFT_PROJECT_DIR}/patches/allow-build-with-root.patch
       build/workspaces/update-workspaces.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
       make -j${CRAFT_PARALLEL_BUILD_COUNT} config=release -C build/workspaces/gcc
       P=binaries/system
