@@ -12,6 +12,11 @@ checksums=$(curl -s "${checksums_url}" | tail -n +2)
 newest_build_checksum="${checksum_algorithm}/$(echo "${checksums}" | grep "unix-build.tar.xz" | cut -d' ' -f1)"
 newest_data_checksum="${checksum_algorithm}/$(echo "${checksums}" | grep "unix-data.tar.xz" | cut -d' ' -f1)"
 
+if [ -z "${newest_build_checksum}" ] || [ -z "${newest_data_checksum}" ]; then
+  echo "Failed to retrieve the checksums for the last successful nightly build, bailing out."
+  exit 0
+fi
+
 if [ "${newest_build_checksum}" = "${current_build_checksum}" ] && \
     [ "${newest_data_checksum}" = "${current_data_checksum}" ]; then
   echo "Already packaging the latest nightly build, nothing to do."
