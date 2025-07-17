@@ -1,5 +1,5 @@
 name: 0ad
-version: 0.27.0-alpha
+version: 0.27.1-alpha
 summary: Real-time strategy game of ancient warfare
 description: |
  0 A.D. (pronounced “zero-ey-dee”) is a free, open-source, historical
@@ -75,8 +75,8 @@ layout:
 parts:
   0ad-unix-build:
     plugin: nil
-    source: https://releases.wildfiregames.com/0ad-0.27.0-unix-build.tar.xz
-    source-checksum: sha1/8c02295fff7363df0120dc060dc07ee9155ecbf1
+    source: https://releases.wildfiregames.com/0ad-0.27.1-unix-build.tar.xz
+    source-checksum: sha1/1dbb863b0062298ed1def8cd53a243bc2e7c9f76
     build-packages:
       - binutils
       - cargo
@@ -110,7 +110,6 @@ parts:
       - zlib1g-dev
     override-build: |
       env SHELL=/bin/sh libraries/build-source-libs.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
-      patch -d . -p1 < ${CRAFT_PROJECT_DIR}/patches/allow-build-with-root.patch
       build/workspaces/update-workspaces.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
       make -j${CRAFT_PARALLEL_BUILD_COUNT} config=release -C build/workspaces/gcc
       P=binaries/system
@@ -125,8 +124,8 @@ parts:
       sed -i -e "s#Icon=0ad#Icon=/0ad.png#" ${CRAFT_PART_INSTALL}/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://releases.wildfiregames.com/0ad-0.27.0-unix-data.tar.xz
-    source-checksum: sha1/5f532c742b4050f4380c83a7a7d8278e367f42de
+    source: https://releases.wildfiregames.com/0ad-0.27.1-unix-data.tar.xz
+    source-checksum: sha1/36dc2f6dc9df3efa80c4eade7b87ae254cb46c7d
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
