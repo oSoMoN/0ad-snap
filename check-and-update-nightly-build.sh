@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 yaml_file="snapcraft.yaml"
 
 current_build_checksum="$(yq '.parts.0ad-unix-build.source-checksum' "${yaml_file}")"
