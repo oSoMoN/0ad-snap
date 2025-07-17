@@ -169,6 +169,8 @@ parts:
     after: [0ad-launcher]
     source: https://github.com/canonical/gpu-snap.git
     plugin: dump
+    stage:
+      - -README.md
     override-prime: |
       craftctl default
       ${CRAFT_PART_SRC}/bin/gpu-2404-cleanup mesa-2404
