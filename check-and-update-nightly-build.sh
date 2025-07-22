@@ -8,9 +8,10 @@ current_build_checksum="$(yq '.parts.0ad-unix-build.source-checksum' "${yaml_fil
 current_data_checksum="$(yq '.parts.0ad-unix-data.source-checksum' "${yaml_file}")"
 
 base_url="https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild"
-checksums_url="${base_url}/pipeline-console/log?nodeId=67"
+artifacts_url="${base_url}/api/json?tree=artifacts%5BrelativePath%5D"
 checksum_algorithm="sha1"
-checksums=$(curl -s "${checksums_url}" | tail -n +2)
+checksum_files=$(curl -s "${artifacts_url}" | jq -r '.artifacts.[] | select(.relativePath | test(".*-unix-.*\\.tar\\.xz\\.sha1sum")) | .relativePath')
+checksums=$(for checksum_file in $checksum_files; do curl -s "${base_url}/artifact/${checksum_file}"; done)
 newest_build_checksum="${checksum_algorithm}/$(echo "${checksums}" | grep "unix-build.tar.xz" | cut -d' ' -f1)"
 newest_data_checksum="${checksum_algorithm}/$(echo "${checksums}" | grep "unix-data.tar.xz" | cut -d' ' -f1)"
 
@@ -45,4 +46,3 @@ patch_file="${yaml_file}.patch"
 diff --ignore-space-change --ignore-blank-lines "${yaml_file}" "${new_file}" > "${patch_file}"
 patch "${yaml_file}" "${patch_file}"
 rm "${new_file}" "${patch_file}"
-
