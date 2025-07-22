@@ -15,7 +15,7 @@ checksums=$(for checksum_file in $checksum_files; do curl -s "${base_url}/artifa
 newest_build_checksum="${checksum_algorithm}/$(echo "${checksums}" | grep "unix-build.tar.xz" | cut -d' ' -f1)"
 newest_data_checksum="${checksum_algorithm}/$(echo "${checksums}" | grep "unix-data.tar.xz" | cut -d' ' -f1)"
 
-if [ -z "${newest_build_checksum}" ] || [ -z "${newest_data_checksum}" ]; then
+if [ "${newest_build_checksum}" = "${checksum_algorithm}/" ] || [ "${newest_data_checksum}" = "${checksum_algorithm}/" ]; then
   echo "Failed to retrieve the checksums for the last successful nightly build, bailing out."
   exit 0
 fi
