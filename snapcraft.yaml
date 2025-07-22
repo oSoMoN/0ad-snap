@@ -75,8 +75,8 @@ layout:
 parts:
   0ad-unix-build:
     plugin: nil
-    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/
-    source-checksum: sha1/
+    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-build.tar.xz
+    source-checksum: sha1/8292420bc332a07afc28ce1d6c19a58c7c47c9bf
     build-packages:
       - binutils
       - cargo
@@ -129,8 +129,8 @@ parts:
       sed -i -e "s#Icon=0ad#Icon=/0ad.png#" ${CRAFT_PART_INSTALL}/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/
-    source-checksum: sha1/
+    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-data.tar.xz
+    source-checksum: sha1/7a042cf6c5aeedaaebde15805d07ca831d3c6900
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
