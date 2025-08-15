@@ -17,8 +17,8 @@ fi
 # A followup fix (https://github.com/canonical/mesa-2404/pull/64) changes the
 # location of X11 locales, so the export is conditional and can be removed
 # altogether once the fix has landed and is 100% deployed to users
-XLOCALEDIR="$SNAP/gpu-2404/X11/locale"
-[ -d "$XLOCALEDIR" ] && export XLOCALEDIR
+OLDXLOCALEDIR="$SNAP/gpu-2404/X11/locale"
+[ -d "$OLDXLOCALEDIR" ] && export XLOCALEDIR="$OLDXLOCALEDIR"
 
 export LOCPATH="$SNAP/usr/lib/locale"
 
