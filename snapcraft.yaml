@@ -76,7 +76,7 @@ parts:
   0ad-unix-build:
     plugin: nil
     source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-build.tar.xz
-    source-checksum: sha1/be0dcb31c2740a5a9773794ba26f4af2b3c9fcb8
+    source-checksum: sha1/bead6a084e4551aec2c19846eebf25540285fe7d
     build-packages:
       - binutils
       - cargo
@@ -131,7 +131,7 @@ parts:
   0ad-unix-data:
     plugin: dump
     source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-data.tar.xz
-    source-checksum: sha1/6498829df6731a723e0535ee3f156dd2b68f859c
+    source-checksum: sha1/a342293ec776c5ab22c67608ccfef5b5efb6849a
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
