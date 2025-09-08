@@ -73,13 +73,20 @@ layout:
     symlink: $SNAP/gpu-2404/X11/XErrorDB
 
 parts:
+  rustc:
+    plugin: rust
+    rust-channel: 1.76.0
+    source: .
+    override-build: |
+      cargo install cbindgen
+    override-prime: 'true'
   0ad-unix-build:
+    after: [rustc]
     plugin: nil
     source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-build.tar.xz
     source-checksum: sha1/657ae08601f89eaa66f3f23af687bc73b53c05d8
     build-packages:
       - binutils
-      - cargo
       - cmake
       - findutils
       - g++
@@ -106,7 +113,6 @@ parts:
       - patch
       - pkg-config
       - python3
-      - rustc
       - sed
       - uuid-dev
       - zlib1g-dev
