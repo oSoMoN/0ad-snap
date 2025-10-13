@@ -109,6 +109,7 @@ parts:
       - uuid-dev
       - zlib1g-dev
     override-build: |
+      patch -d . -p1 < ${CRAFT_PROJECT_DIR}/patches/spidermonkey-no-debug.patch
       env SHELL=/bin/sh libraries/build-source-libs.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
       build/workspaces/update-workspaces.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
       make -j${CRAFT_PARALLEL_BUILD_COUNT} config=release -C build/workspaces/gcc
