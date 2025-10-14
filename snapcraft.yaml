@@ -111,13 +111,16 @@ parts:
     override-build: |
       patch -d . -p1 < ${CRAFT_PROJECT_DIR}/patches/spidermonkey-no-debug.patch
       env SHELL=/bin/sh libraries/build-source-libs.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
+      rm -rf libraries/source/spidermonkey/lib/*
       build/workspaces/update-workspaces.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
       make -j${CRAFT_PARALLEL_BUILD_COUNT} config=release -C build/workspaces/gcc
+      rm -rf build/workspaces/gcc
       P=binaries/system
+      rm -rf ${P}/*.a ${P}/test
+      find ${P} -type f -executable -exec strip --strip-all {} +
       mkdir -p ${CRAFT_PART_INSTALL}/${P}
       cp ${P}/libnvcore.so ${P}/libnvimage.so ${P}/libnvmath.so ${P}/libnvtt.so ${CRAFT_PART_INSTALL}/${P}/
       cp ${P}/pyrogenesis ${P}/ActorEditor ${P}/libAtlasUI.so ${P}/libCollada.so ${P}/libmozjs*-release.so ${P}/readme.txt ${CRAFT_PART_INSTALL}/${P}/
-      find ${CRAFT_PART_INSTALL}/${P} -type f -executable -exec strip --strip-all {} +
       P=binaries/data/l10n
       mkdir -p ${CRAFT_PART_INSTALL}/${P}
       cp ${P}/*.po ${CRAFT_PART_INSTALL}/${P}/
