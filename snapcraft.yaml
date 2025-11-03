@@ -118,7 +118,7 @@ parts:
       - zlib1g-dev
     override-pull: |
       craftctl default
-      craftctl set version="$(grep -m1 VERSION source/lib/build_version.h | sed 's/^.*"\(.*\)"$/\1/')-dev"
+      craftctl set version="$(sed 's/L\"release-\(.*\),.*/\1/' build/build_version/build_version.txt)-dev"
     override-build: |
       patch -d . -p1 < ${CRAFT_PROJECT_DIR}/patches/spidermonkey-no-debug.patch
       env SHELL=/bin/sh libraries/build-source-libs.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
