@@ -78,6 +78,7 @@ parts:
     rust-channel: 1.76.0
     source: .
     override-build: |
+      rustup component remove clippy rust-docs
       cargo install --locked cbindgen
     override-prime: 'true'
   0ad-unix-build:
