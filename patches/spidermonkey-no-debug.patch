@@ -5,16 +5,16 @@ Forwarded: not-needed
 
 --- a/libraries/source/spidermonkey/build.sh
 +++ b/libraries/source/spidermonkey/build.sh
-@@ -145,7 +145,7 @@
+@@ -129,7 +129,7 @@
  
  	# Build
  	# Debug (broken on FreeBSD)
 -	if [ "${OS}" != "FreeBSD" ]; then
 +	if false; then
- 		# shellcheck disable=SC2086
  		MOZCONFIG="$(pwd)/../mozconfig" \
  		MOZCONFIG_OPTIONS="${CONF_OPTS} \
-@@ -202,7 +202,7 @@
+ 			--enable-debug \
+@@ -190,7 +190,7 @@
  mkdir include-release
  cp -R -L "${FOLDER}"/build-release/dist/include/* include-release/
  
@@ -23,12 +23,12 @@ Forwarded: not-needed
  	mkdir include-debug
  	cp -R -L "${FOLDER}"/build-debug/dist/include/* include-debug/
  fi
-@@ -234,7 +234,7 @@
+@@ -222,7 +222,7 @@
  else
  	# Copy shared libs to lib/, they will also be copied to binaries/system, so the compiler and executable (resp.) can find them.
- 	cp -L "${FOLDER}/build-${REL}/dist/bin/${LIB_PREFIX}${LIB_NAME}-${REL}${LIB_SUFFIX}" "lib/${LIB_PREFIX}${LIB_NAME}-${REL}${LIB_SUFFIX}"
+ 	cp -L "${FOLDER}/build-${REL}/js/src/build/${LIB_PREFIX}${LIB_NAME}-${REL}${LIB_SUFFIX}" "lib/${LIB_PREFIX}${LIB_NAME}-${REL}${LIB_SUFFIX}"
 -	if [ "${OS}" != "FreeBSD" ]; then
 +	if false; then
- 		cp -L "${FOLDER}/build-${DEB}/dist/bin/${LIB_PREFIX}${LIB_NAME}-${DEB}${LIB_SUFFIX}" "lib/${LIB_PREFIX}${LIB_NAME}-${DEB}${LIB_SUFFIX}"
+ 		cp -L "${FOLDER}/build-${DEB}/js/src/build/${LIB_PREFIX}${LIB_NAME}-${DEB}${LIB_SUFFIX}" "lib/${LIB_PREFIX}${LIB_NAME}-${DEB}${LIB_SUFFIX}"
  	fi
  fi
