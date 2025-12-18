@@ -1,0 +1,16 @@
+From: Olivier Tilloy <olivier@tilloy.net>
+Date: Thu, 18 Dec 2025 21:13:18 +0200
+Subject: Clean up after building premake, to save disk space
+Forwarded: not-needed
+
+--- a/libraries/source/premake-core/build.sh
++++ b/libraries/source/premake-core/build.sh
+@@ -75,4 +75,7 @@
+ mkdir -p bin
+ cp "premake-core-${PV}/bin/release/premake5" bin/
+ 
++# clean
++rm -Rf "premake-core-${PV}.tar.gz" "premake-core-${PV}"
++
+ echo "${LIB_VERSION}" >.already-built
+
