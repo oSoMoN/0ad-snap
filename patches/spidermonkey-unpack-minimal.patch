@@ -5,16 +5,17 @@ Forwarded: not-needed
 
 --- a/libraries/source/spidermonkey/build.sh
 +++ b/libraries/source/spidermonkey/build.sh
-@@ -69,7 +69,11 @@
+@@ -69,7 +69,12 @@
  
  # unpack
  rm -Rf "${FOLDER}"
 -"${TAR}" xfJ "${FOLDER}.tar.xz"
 +"${TAR}" xfJ "${FOLDER}.tar.xz" \
 +	--exclude=js/src/tests/non262 \
-+	--exclude=js/src/tests/tests262 \
++	--exclude=js/src/tests/test262 \
 +	--exclude=js/src/jit-test \
 +	--exclude=testing/web-platform
++rm -Rf "${FOLDER}.tar.xz"
  
  # patch
  (
