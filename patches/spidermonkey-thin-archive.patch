@@ -1,0 +1,30 @@
+From: Olivier Tilloy <olivier@tilloy.net>
+Date: Mon, 29 Dec 2025 14:58:07 +0200
+Subject: Create thin archives when building Spidermonkey, to save disk space
+Forwarded: not-needed
+
+--- a/libraries/source/spidermonkey/patches/patch.sh
++++ b/libraries/source/spidermonkey/patches/patch.sh
+@@ -47,3 +47,6 @@
+ 
+ # Fix building with python 3.14
+ patch -p1 <"${PATCHES}"/FixPython3_14.diff
++
++# Make thin archives to save disk space
++patch -p1 <"${PATCHES}"/ThinArchive.patch
+
+--- /dev/null
++++ b/libraries/source/spidermonkey/patches/ThinArchive.patch
+@@ -0,0 +1,11 @@
++--- a/build/moz.configure/toolchain.configure
+++++ b/build/moz.configure/toolchain.configure
++@@ -3368,7 +3368,7 @@
++ 
++         return namespace(
++             names=names,
++-            flags=("crs", "$@"),
+++            flags=("crs", "--thin", "$@"),
++         )
++ 
++     return ar_config
+
