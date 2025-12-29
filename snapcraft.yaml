@@ -85,7 +85,7 @@ parts:
     after: [rustc]
     plugin: nil
     source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-build.tar.xz
-    source-checksum: sha1/ffc07c3e56edfa02509cda926178ce807c38e330
+    source-checksum: sha1/de569885476d83bed08288324b3ecd4b27b0cf74
     build-packages:
       - binutils
       - cmake
@@ -144,7 +144,7 @@ parts:
   0ad-unix-data:
     plugin: dump
     source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-data.tar.xz
-    source-checksum: sha1/c6e4bdf24a7ab4620d830b0e3b8565171d1ef89d
+    source-checksum: sha1/226639a31dfcdef41cf022a38346e74f8aa96e1f
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
