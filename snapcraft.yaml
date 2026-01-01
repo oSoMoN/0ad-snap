@@ -121,7 +121,7 @@ parts:
       craftctl default
       craftctl set version="$(sed 's/L\"release-\(.*\),.*/\1/' build/build_version/build_version.txt)-dev"
     override-build: |
-      for patch in fcollada-move premake-clean spidermonkey-no-debug spidermonkey-strip spidermonkey-unpack-minimal spidermonkey-thin-archive
+      for patch in fcollada-move premake-clean spidermonkey-no-debug spidermonkey-strip spidermonkey-thin-archive
       do
         patch -d . -p1 < "${CRAFT_PROJECT_DIR}/patches/${patch}.patch"
       done
