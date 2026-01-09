@@ -23,7 +23,7 @@ jobs:
         id: build
       - uses: snapcore/action-publish@v1
         env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPSTORE_LOGIN }}
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPSTORE_CREDS_REBUILD_CANDIDATE }}
         with:
           snap: ${{ steps.build.outputs.snap }}
           release: candidate/rebuild
