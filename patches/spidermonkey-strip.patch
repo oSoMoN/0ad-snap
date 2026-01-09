@@ -1,0 +1,18 @@
+From: Olivier Tilloy <olivier@tilloy.net>
+Date: Thu, 18 Dec 2025 14:27:34 +0200
+Subject: Strip binaries when building Spidermonkey, to save disk space
+Forwarded: not-needed
+
+--- a/libraries/source/spidermonkey/build.sh
++++ b/libraries/source/spidermonkey/build.sh
+@@ -141,7 +141,8 @@
+ 	# Release
+ 	MOZCONFIG="$(pwd)/../mozconfig" \
+ 	MOZCONFIG_OPTIONS="${CONF_OPTS} \
+-		--enable-optimize" \
++		--enable-optimize \
++		--enable-strip" \
+ 	BUILD_DIR="build-release" \
+ 		./mach build "${JOBS}"
+ )
+

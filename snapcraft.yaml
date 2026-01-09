@@ -109,7 +109,10 @@ parts:
       - uuid-dev
       - zlib1g-dev
     override-build: |
-      patch -d . -p1 < ${CRAFT_PROJECT_DIR}/patches/spidermonkey-no-debug.patch
+      for patch in spidermonkey-no-debug spidermonkey-strip spidermonkey-thin-archive
+      do
+        patch -d . -p1 < "${CRAFT_PROJECT_DIR}/patches/${patch}.patch"
+      done
       env SHELL=/bin/sh libraries/build-source-libs.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
       rm -rf libraries/source/spidermonkey/lib/*
       build/workspaces/update-workspaces.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
