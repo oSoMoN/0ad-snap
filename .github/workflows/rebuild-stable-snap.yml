@@ -1,0 +1,30 @@
+name: Rebuild the stable snap
+
+# Allow running manually only.
+# This workflow is meant to be run when the snap store informs owners that
+# it was built with packages from the Ubuntu archive that have since received
+# security updates.
+on: workflow_dispatch
+
+concurrency: ${{ github.workflow }}
+
+jobs:
+  rebuild-and-publish:
+    strategy:
+      matrix:
+        # build for amd64 and arm64
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: stable
+      - uses: snapcore/action-build@v1
+        id: build
+      - uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPSTORE_LOGIN }}
+        with:
+          snap: ${{ steps.build.outputs.snap }}
+          release: candidate/rebuild
+
