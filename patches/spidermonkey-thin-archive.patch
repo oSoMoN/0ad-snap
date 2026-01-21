@@ -3,6 +3,19 @@ Date: Mon, 29 Dec 2025 14:58:07 +0200
 Subject: Create thin archives when building Spidermonkey, to save disk space
 Forwarded: not-needed
 
+--- a/libraries/source/spidermonkey/build.sh
++++ b/libraries/source/spidermonkey/build.sh
+@@ -100,6 +100,9 @@
+ 	# Do not let mach install tools in the user's home, create a disposable folder
+ 	export MOZBUILD_STATE_PATH="${MOZBUILD_STATE_PATH:=$(pwd)/mozbuild-state}"
+ 
++	# Make thin archives to save disk space
++	export AR_FLAGS="--thin"
++
+ 	if [ -n "$PROFILE" ]; then
+ 		CONF_OPTS="$CONF_OPTS
+ 			--enable-profiling
+
 --- a/libraries/source/spidermonkey/patches/patch.sh
 +++ b/libraries/source/spidermonkey/patches/patch.sh
 @@ -47,3 +47,6 @@
@@ -10,21 +23,70 @@ Forwarded: not-needed
  # Fix building with python 3.14
  patch -p1 <"${PATCHES}"/FixPython3_14.diff
 +
-+# Make thin archives to save disk space
-+patch -p1 <"${PATCHES}"/ThinArchive.patch
++# Cherry-pick an upstream commit to allow passing custom flags to ar
++patch -p1 <"${PATCHES}"/UpstreamCustomARFlags.patch
 
 --- /dev/null
-+++ b/libraries/source/spidermonkey/patches/ThinArchive.patch
-@@ -0,0 +1,11 @@
++++ b/libraries/source/spidermonkey/patches/UpstreamCustomARFlags.patch
+@@ -0,0 +1,61 @@
++
++# HG changeset patch
++# User serge-sans-paille <sguelton@mozilla.com>
++# Date 1768903043 0
++# Node ID a924182c4e55e19b1b8dbd5904e8f9ca99e79b98
++# Parent  cd5449e09b6cd3e3b0bb1f2d6d8a8048e8883535
++Bug 2008085 - Provide AR_FLAGS customization point r=glandium
++
++In a similar way to other customization flags.
++
++That way users can specify `--thin` if they want to to reduce disk
++pressure.
++
++Differential Revision: https://phabricator.services.mozilla.com/D278841
++
++
++diff --git a/build/moz.configure/toolchain.configure b/build/moz.configure/toolchain.configure
 +--- a/build/moz.configure/toolchain.configure
 ++++ b/build/moz.configure/toolchain.configure
-+@@ -3368,7 +3368,7 @@
++@@ -4,6 +4,13 @@
++ # License, v. 2.0. If a copy of the MPL was not distributed with this
++ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
++ 
+++option(
+++    env="AR_FLAGS",
+++    help="Extra flags for creating static archives",
+++    nargs=1,
+++    default="",
+++)
+++
++ # Code optimization
++ # ==============================================================
++ 
++@@ -3346,12 +3353,14 @@
++     if not toolchain_prefix:
++         toolchain_prefix = dependable(None)
++ 
++-    @depends(toolchain_prefix, c_compiler)
++-    def ar_config(toolchain_prefix, c_compiler):
+++    @depends(toolchain_prefix, c_compiler, "AR_FLAGS")
+++    @imports(_from="mozbuild.shellutil", _import="split")
+++    def ar_config(toolchain_prefix, c_compiler, env_flags):
+++        extra_ar_flags = tuple(split(env_flags[0]))
++         if c_compiler.type == "clang-cl":
++             return namespace(
++                 names=("llvm-lib",),
++-                flags=("-llvmlibthin", "-out:$@"),
+++                flags=("-llvmlibthin", "-out:$@") + extra_ar_flags,
++             )
++ 
++         names = tuple("%s%s" % (p, "ar") for p in (toolchain_prefix or ()) + ("",))
++@@ -3368,7 +3377,7 @@
 + 
 +         return namespace(
 +             names=names,
 +-            flags=("crs", "$@"),
-++            flags=("crs", "--thin", "$@"),
+++            flags=("crs",) + extra_ar_flags + ("$@",),
 +         )
 + 
 +     return ar_config
-
++
