@@ -1,31 +1,54 @@
+From 6436ba3af974bdf32fd770d9d52bcbccb982e38b Mon Sep 17 00:00:00 2001
 From: Olivier Tilloy <olivier@tilloy.net>
-Date: Mon, 29 Dec 2025 14:58:07 +0200
-Subject: Create thin archives when building Spidermonkey, to save disk space
-Forwarded: not-needed
+Date: Wed, 21 Jan 2026 13:14:41 +0100
+Subject: [PATCH] Spidermonkey build: cherry-pick an upstream commit to create
+ thin archives
 
+This saves a sizeable amount of disk space during the build, by not creating
+a very large libjs_static.a (~1.5 GB) that contains a copy of all the symbols
+in the object files generated during the build.
+
+Upstream bug: https://bugzilla.mozilla.org/show_bug.cgi?id=2008085
+Upstream commit: https://hg.mozilla.org/mozilla-central/rev/a924182c4e55
+
+Note that the upstream commit doesn't apply cleanly to Spidermonkey 128.13.0,
+it had to be rebased.
+---
+ libraries/source/spidermonkey/build.sh        |  8 ++-
+ .../patches/UpstreamCustomARFlags.patch       | 61 +++++++++++++++++++
+ .../source/spidermonkey/patches/patch.sh      |  3 +
+ 3 files changed, 71 insertions(+), 1 deletion(-)
+ create mode 100644 libraries/source/spidermonkey/patches/UpstreamCustomARFlags.patch
+
+diff --git a/libraries/source/spidermonkey/build.sh b/libraries/source/spidermonkey/build.sh
+index 62716f58cc..8e00a4214a 100755
 --- a/libraries/source/spidermonkey/build.sh
 +++ b/libraries/source/spidermonkey/build.sh
-@@ -100,6 +100,9 @@
+@@ -9,7 +9,7 @@ cd "$(dirname "$0")"
+ PV=128.13.0
+ FOLDER="mozjs-${PV}"
+ # If same-version changes are needed, increment this.
+-LIB_VERSION="${PV}+wfg4"
++LIB_VERSION="${PV}+wfg5"
+ LIB_NAME="mozjs128"
+ 
+ build_archive()
+@@ -100,6 +100,12 @@ rm -Rf "${FOLDER}"
  	# Do not let mach install tools in the user's home, create a disposable folder
  	export MOZBUILD_STATE_PATH="${MOZBUILD_STATE_PATH:=$(pwd)/mozbuild-state}"
  
-+	# Make thin archives to save disk space
-+	export AR_FLAGS="--thin"
++	if [ "${OS}" != "Darwin" ]; then
++		# Make thin archives to save disk space
++		# The AR_FLAGS customization point is provided and honored by mach
++		export AR_FLAGS="--thin"
++	fi
 +
  	if [ -n "$PROFILE" ]; then
  		CONF_OPTS="$CONF_OPTS
  			--enable-profiling
-
---- a/libraries/source/spidermonkey/patches/patch.sh
-+++ b/libraries/source/spidermonkey/patches/patch.sh
-@@ -47,3 +47,6 @@
- 
- # Fix building with python 3.14
- patch -p1 <"${PATCHES}"/FixPython3_14.diff
-+
-+# Cherry-pick an upstream commit to allow passing custom flags to ar
-+patch -p1 <"${PATCHES}"/UpstreamCustomARFlags.patch
-
+diff --git a/libraries/source/spidermonkey/patches/UpstreamCustomARFlags.patch b/libraries/source/spidermonkey/patches/UpstreamCustomARFlags.patch
+new file mode 100644
+index 0000000000..d3b52045a4
 --- /dev/null
 +++ b/libraries/source/spidermonkey/patches/UpstreamCustomARFlags.patch
 @@ -0,0 +1,61 @@
@@ -90,3 +113,14 @@ Forwarded: not-needed
 + 
 +     return ar_config
 +
+diff --git a/libraries/source/spidermonkey/patches/patch.sh b/libraries/source/spidermonkey/patches/patch.sh
+index 04bbe2bf4e..8ea5bccf68 100755
+--- a/libraries/source/spidermonkey/patches/patch.sh
++++ b/libraries/source/spidermonkey/patches/patch.sh
+@@ -47,3 +47,6 @@ patch -p1 <"${PATCHES}"/SuppressDanglingPointerWarning.patch
+ 
+ # Fix building with python 3.14
+ patch -p1 <"${PATCHES}"/FixPython3_14.diff
++
++# Cherry-pick an upstream commit to allow passing custom flags to ar
++patch -p1 <"${PATCHES}"/UpstreamCustomARFlags.patch
