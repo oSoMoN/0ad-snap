@@ -1,5 +1,5 @@
 name: 0ad
-version: 0.27.1-rc2-alpha
+version: 0.28.0-rc4
 summary: Real-time strategy game of ancient warfare
 description: |
  0 A.D. (pronounced “zero-ey-dee”) is a free, open-source, historical
@@ -73,13 +73,21 @@ layout:
     symlink: $SNAP/gpu-2404/X11/XErrorDB
 
 parts:
+  rustc:
+    plugin: rust
+    rust-channel: 1.76.0
+    source: .
+    override-build: |
+      rustup component remove clippy rust-docs
+      cargo install --locked cbindgen
+    override-prime: 'true'
   0ad-unix-build:
+    after: [rustc]
     plugin: nil
-    source: https://releases.wildfiregames.com/rc/0ad-0.27.1-rc2-unix-build.tar.xz
-    source-checksum: sha1/5a351e63fe3c95c412352e47f95d2cae79c333ce
+    source: https://releases.wildfiregames.com/rc/0ad-0.28.0-rc4-unix-build.tar.xz
+    source-checksum: sha1/b6c9e9f46c5cb3e360be2dfd1727fb3db508db01
     build-packages:
       - binutils
-      - cargo
       - cmake
       - findutils
       - g++
@@ -105,11 +113,14 @@ parts:
       - patch
       - pkg-config
       - python3
-      - rustc
+      - sed
       - uuid-dev
       - zlib1g-dev
     override-build: |
-      patch -d . -p1 < ${CRAFT_PROJECT_DIR}/patches/spidermonkey-no-debug.patch
+      for patch in fcollada-move premake-clean spidermonkey-no-debug spidermonkey-strip spidermonkey-thin-archive
+      do
+        patch -d . -p1 < "${CRAFT_PROJECT_DIR}/patches/${patch}.patch"
+      done
       env SHELL=/bin/sh libraries/build-source-libs.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
       rm -rf libraries/source/spidermonkey/lib/*
       build/workspaces/update-workspaces.sh -j${CRAFT_PARALLEL_BUILD_COUNT}
@@ -128,8 +139,8 @@ parts:
       sed -i -e "s#Icon=0ad#Icon=/0ad.png#" ${CRAFT_PART_INSTALL}/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://releases.wildfiregames.com/rc/0ad-0.27.1-rc2-unix-data.tar.xz
-    source-checksum: sha1/086298c532ee15dc578b9ff489b0fe395dc4bf03
+    source: https://releases.wildfiregames.com/rc/0ad-0.28.0-rc4-unix-data.tar.xz
+    source-checksum: sha1/85446f9399bca7a551b98b03d64846951b928e3b
     organize:
       config: binaries/data/config
       mods: binaries/data/mods

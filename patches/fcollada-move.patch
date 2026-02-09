@@ -1,0 +1,16 @@
+From: Olivier Tilloy <olivier@tilloy.net>
+Date: Thu, 18 Dec 2025 19:17:32 +0200
+Subject: Move binaries when building FCollada, to save disk space
+Forwarded: not-needed
+
+--- a/libraries/source/fcollada/build.sh
++++ b/libraries/source/fcollada/build.sh
+@@ -68,6 +68,6 @@
+ 
+ # install
+ rm -Rf include lib
+-cp -R fcollada-${PV}/include fcollada-${PV}/lib .
++mv fcollada-${PV}/include fcollada-${PV}/lib .
+ 
+ echo "${LIB_VERSION}" >.already-built
+
