@@ -1,5 +1,5 @@
 name: 0ad
-version: 0.27.1-alpha
+version: 0.28.0
 summary: Real-time strategy game of ancient warfare
 description: |
  0 A.D. (pronounced “zero-ey-dee”) is a free, open-source, historical
@@ -73,13 +73,21 @@ layout:
     symlink: $SNAP/gpu-2404/X11/XErrorDB
 
 parts:
+  rustc:
+    plugin: rust
+    rust-channel: 1.76.0
+    source: .
+    override-build: |
+      rustup component remove clippy rust-docs
+      cargo install --locked cbindgen
+    override-prime: 'true'
   0ad-unix-build:
+    after: [rustc]
     plugin: nil
-    source: https://releases.wildfiregames.com/0ad-0.27.1-unix-build.tar.xz
-    source-checksum: sha1/1dbb863b0062298ed1def8cd53a243bc2e7c9f76
+    source: https://releases.wildfiregames.com/0ad-0.28.0-unix-build.tar.xz
+    source-checksum: sha1/a0ca5a7d19a4bff136382b4da906c54696b234ab
     build-packages:
       - binutils
-      - cargo
       - cmake
       - findutils
       - g++
@@ -105,11 +113,11 @@ parts:
       - patch
       - pkg-config
       - python3
-      - rustc
+      - sed
       - uuid-dev
       - zlib1g-dev
     override-build: |
-      for patch in spidermonkey-no-debug spidermonkey-strip spidermonkey-thin-archive
+      for patch in fcollada-move premake-clean spidermonkey-no-debug spidermonkey-strip spidermonkey-thin-archive
       do
         patch -d . -p1 < "${CRAFT_PROJECT_DIR}/patches/${patch}.patch"
       done
@@ -131,8 +139,8 @@ parts:
       sed -i -e "s#Icon=0ad#Icon=/0ad.png#" ${CRAFT_PART_INSTALL}/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://releases.wildfiregames.com/0ad-0.27.1-unix-data.tar.xz
-    source-checksum: sha1/36dc2f6dc9df3efa80c4eade7b87ae254cb46c7d
+    source: https://releases.wildfiregames.com/0ad-0.28.0-unix-data.tar.xz
+    source-checksum: sha1/9f3220425341978c8bc01ea23349f0ee314cdc5b
     organize:
       config: binaries/data/config
       mods: binaries/data/mods

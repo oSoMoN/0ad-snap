@@ -5,14 +5,14 @@ Forwarded: not-needed
 
 --- a/libraries/source/spidermonkey/build.sh
 +++ b/libraries/source/spidermonkey/build.sh
-@@ -141,7 +141,8 @@
- 	# Release
+@@ -159,7 +159,8 @@
+ 	# shellcheck disable=SC2086
  	MOZCONFIG="$(pwd)/../mozconfig" \
  	MOZCONFIG_OPTIONS="${CONF_OPTS} \
 -		--enable-optimize" \
 +		--enable-optimize \
 +		--enable-strip" \
  	BUILD_DIR="build-release" \
- 		./mach build "${JOBS}"
+ 		./mach build ${JOBS}
  )
 
