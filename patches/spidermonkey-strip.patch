@@ -5,7 +5,7 @@ Forwarded: not-needed
 
 --- a/libraries/source/spidermonkey/build.sh
 +++ b/libraries/source/spidermonkey/build.sh
-@@ -159,7 +159,8 @@
+@@ -171,7 +171,8 @@
  	# shellcheck disable=SC2086
  	MOZCONFIG="$(pwd)/../mozconfig" \
  	MOZCONFIG_OPTIONS="${CONF_OPTS} \
