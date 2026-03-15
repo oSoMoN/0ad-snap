@@ -119,7 +119,7 @@ parts:
       - zlib1g-dev
     override-pull: |
       craftctl default
-      craftctl set version="$(sed 's/L\"release-\(.*\),.*/\1/' build/build_version/build_version.txt)-dev"
+      craftctl set version="$(eval $(grep BUNDLE_VERSION= source/tools/dist/build-unix-tarballs.sh); echo "${BUNDLE_VERSION%dev}")-dev"
     override-build: |
       for patch in fcollada-move premake-clean spidermonkey-no-debug spidermonkey-strip
       do
