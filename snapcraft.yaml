@@ -84,8 +84,8 @@ parts:
   0ad-unix-build:
     after: [rustc]
     plugin: nil
-    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-build.tar.xz
-    source-checksum: sha1/e39162a98cda9aee4ca1d355817a5cbde88d3b33
+    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.29.0dev-unix-build.tar.xz
+    source-checksum: sha1/1d12aeb4fb9984c3daae690c921a2fc6837eb573
     build-packages:
       - binutils
       - cmake
@@ -143,8 +143,8 @@ parts:
       sed -i -e "s#Icon=0ad#Icon=/0ad.png#" ${CRAFT_PART_INSTALL}/0ad.desktop
   0ad-unix-data:
     plugin: dump
-    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.28.0dev-unix-data.tar.xz
-    source-checksum: sha1/1c52cb2fde0f791350f32c9cc905b700b636fdd1
+    source: https://jenkins.wildfiregames.com/job/0ad-bundles/lastSuccessfulBuild/artifact/0ad-0.29.0dev-unix-data.tar.xz
+    source-checksum: sha1/56789168424d75819a5546fa58b687349fea0d3d
     organize:
       config: binaries/data/config
       mods: binaries/data/mods
