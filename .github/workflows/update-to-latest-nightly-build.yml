@@ -29,5 +29,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git commit -a -m "Update to the latest nightly build"
-          git push "https://${GITHUB_ACTOR}:${{ secrets.COMMIT_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" edge
+          git push "https://${GITHUB_ACTOR}:${{ secrets.COMMIT_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" edge || true
 
