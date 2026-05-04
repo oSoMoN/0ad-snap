@@ -25,9 +25,9 @@ jobs:
       - name: Update to the latest nightly build
         run: ./check-and-update-nightly-build.sh
       - name: Commit updated snapcraft.yaml
-        uses: actions-js/push@master
-        with:
-          github_token: ${{ secrets.COMMIT_TOKEN }}
-          branch: edge
-          message: "Update to the latest nightly build"
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -a -m "Update to the latest nightly build"
+          git push "https://${GITHUB_ACTOR}:${{ secrets.COMMIT_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" edge
 
